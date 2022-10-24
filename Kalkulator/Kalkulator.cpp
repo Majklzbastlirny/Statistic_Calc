@@ -23,6 +23,7 @@ Bonusový úkol: Implementujte možnost vykreslení histogramu a gaussova rozlo�
 
 using namespace std;
 char DATA[];
+double datasize = 0;
 
 void Loader()
 {
@@ -40,11 +41,14 @@ printf("Soubor nebyl nalezen, zadej jmeno souboru znovu: ");
 scanf("%s", DATA);
 file = fopen(DATA, "r");
 }
-printf("Soubor nalezen. Nyní se uloží data do paměti.");
+//save number of lines in file to datasize
+while  
+
+/*printf("Soubor nalezen. Nyní se uloží data do paměti.");
 realloc(DATA, sizeof(DATA) + sizeof(char));
 fgets(DATA, sizeof(DATA), file);
 printf("Data byla úspěšně načtena. Nyní můžete provádět statistické výpočty.");
-fclose(file);
+fclose(file);*/
 }
 
 
@@ -54,8 +58,8 @@ int Analyser()
 {
 
 
-	char NUMBERS[] = "^[0-9]*$";
-	char LETTERS[] = "^[a-zA-ZáčďéěíňóřšťůúýžÁČĎÉĚÍŇÓŘŠŤŮÚÝŽ]*$";
+	char NUMBERS = "^[0-9]*$";
+	char LETTERS = "^[a-zA-ZáčďéěíňóřšťůúýžÁČĎÉĚÍŇÓŘŠŤŮÚÝŽ]*$";
 
 	printf("Probíhá analýza dat...");
 
@@ -78,7 +82,7 @@ else
 
 int Saver()
 {
-	char FileName[1];
+	char FileName[];
 	printf("Zadejte jméno souboru, do kterého se mají výsledky uložit: ");
 	scanf("%s", FileName);
 	FILE *file;
@@ -104,9 +108,9 @@ void NumericAnalyser()
 
 //calculate average
 Prumer = for (int i = 0; i < sizeof(DATA); i++) { Prumer += DATA[i]; } Prumer = Prumer / sizeof(DATA);
-Vazenyprumer = for(int i = 0; i < sizeof(DATA); i++) { Vazenyprumer += DATA[i] * i; } Vazenyprumer = Vazenyprumer / sizeof(DATA);
+Vazenyprumer = for (int i = 0; i < sizeof(DATA); i++) { Vazenyprumer += DATA[i] * i; } Vazenyprumer = Vazenyprumer / sizeof(DATA);
 //calculate variance
-Rozptyl = for(int i = 0; i < sizeof(DATA); i++) { Rozptyl += (DATA[i] - Prumer) * (DATA[i] - Prumer); } Rozptyl = Rozptyl / sizeof(DATA);
+Rozptyl = for (int i = 0; i < sizeof(DATA); i++) { Rozptyl += (DATA[i] - Prumer) * (DATA[i] - Prumer); } Rozptyl = Rozptyl / sizeof(DATA);
 //calculate standard deviation
 SmrOdchylka = sqrt(Rozptyl);
 //calculate median
