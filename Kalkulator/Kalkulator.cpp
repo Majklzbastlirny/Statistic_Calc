@@ -1,5 +1,8 @@
 ﻿// Kalkulator.cpp: Definuje vstupní bod pro aplikaci.
 //Author: Michal Basler (247094)
+
+//Preffered platform: Windows
+
 /*
 16) Statistická kalkulačka (průměr, rozptyl, histogramy)
 Úkolem bude vytvoření aplikace pro statistické výpočty. Jako vstupní parametry budou sloužit data
@@ -12,6 +15,9 @@ rozptyl, směrodatná odchylka, histogram, medián).
 znaků, počtu slov, histogram písmen a délek slov.
 3. Výsledky bude možné uložit do textového souboru.
 Bonusový úkol: Implementujte možnost vykreslení histogramu a gaussova rozložení do konzole
+
+Postup: File input->import to memory->Analyser(zjistí jestli je to číslo nebo text)->formátování->výpočty->výstup do
+terminálu ->výstup do souboru 
 */
 
 #include "Kalkulator.h"
@@ -22,63 +28,60 @@ Bonusový úkol: Implementujte možnost vykreslení histogramu a gaussova rozlo�
 
 
 using namespace std;
-char DATA[100];
-double FormatedNumbers[100];
-char FormatedLetters[100];
-double datasize = 0;
+char UnformattedData[] = 1;
+double FormatedNumbers = 1;
+char FormatedWords = 1;
+double datasize;
+	
 
 void Loader()
 {
+	char Filename = ' ';
+	//Ask for file name in same directory as program
+	printf("Zadej jmeno souboru: ");
+	scanf("%s", &Filename);
 
-//Ask for file name in same directory as program
-printf("Zadej jmeno souboru: ");
-scanf("%s", DATA);
+	//look for file, if not found, ask again and again
+	FILE* file;
+	file = fopen(&Filename, "r");
+	while (file == NULL)
+	{
+		printf("Soubor nebyl nalezen, zadej jmeno souboru znovu: ");
+		scanf("%s", Filename);
+		file = fopen(&Filename, "r");
+		
+	}
+	//get size of file and allocate memory for data
+	fseek(file, 0, SEEK_END);
+	datasize = ftell(file);
+	rewind(file);
+	UnformattedData = malloc(datasize+1);
 
-//look for file, if not found, ask again and again
-FILE *file;
-file = fopen(DATA, "r");
-while (file == NULL)
-{
-printf("Soubor nebyl nalezen, zadej jmeno souboru znovu: ");
-scanf("%s", DATA);
-file = fopen(DATA, "r");
+	//put all data from file to Unformated data
+	fread(UnformattedData, 1, datasize, file);
+	fclose(file);
 }
-//save number of lines in file to datasize
-while  
-
-/*printf("Soubor nalezen. Nyní se uloží data do paměti.");
-realloc(DATA, sizeof(DATA) + sizeof(char));
-fgets(DATA, sizeof(DATA), file);
-printf("Data byla úspěšně načtena. Nyní můžete provádět statistické výpočty.");
-fclose(file);*/
-}
-
 
 
 
 int Analyser()
 {
+	float LetterOccurence = 0;
+	float NumberOccurence = 0;
+	//regex_t regex;
+
+	//create regex for numbers
+	//regex number("^[0-9]*$");
+	//create regex for letters
+	//regex letter("^[a-zA-ZáčďéěíňóřšťůúýžÁČĎÉĚÍŇÓŘŠŤŮÚÝŽ]*$");
 
 
-	char NUMBERS = "^[0-9]*$";
-	char LETTERS = "^[a-zA-ZáčďéěíňóřšťůúýžÁČĎÉĚÍŇÓŘŠŤŮÚÝŽ]*$";
-
+	
 	printf("Probíhá analýza dat...");
 
-if (regex_match(DATA, NUMBERS))
-{
-	printf("Data obsahují pouze čísla. Nyní můžete provádět statistické výpočty nad číselnými daty.");
-	return 1;
-}
-else if (regex_match(DATA, LETTERS)){
-	printf("Data obsahují pouze text. Nyní můžete provádět statistické výpočty nad textovými daty.");
-	return 2;
-}
-else
-{
-	printf("Data obsahují jak čísla, tak text. Tento program s tímto typem dat pracovat ještě neumí.");
-	return 0;
-}
+	//scan whole file and apply regex
+
+
 }
 void Formatter(int type)
 {
@@ -104,7 +107,7 @@ void Formatter(int type)
 
 int Saver()
 {
-	char FileName[];
+	char FileName[255];
 	printf("Zadejte jméno souboru, do kterého se mají výsledky uložit: ");
 	scanf("%s", FileName);
 	FILE *file;
@@ -113,70 +116,71 @@ int Saver()
 
 void NumericAnalyser()
 {
-	double Prumer;
-	double Vazenyprumer;
-	double Rozptyl;
-	double SmrOdchylka;
-	double Median;
-	double Min;
-	double Max;
+	double Prumer = 0;
+	double Vazenyprumer = 0;
+	double Rozptyl = 0;
+	double SmrOdchylka = 0;
+	double Median = 0;
+	double Min = 0;
+	double Max = 0;
 
-//1. Aplikace bude rozdělena do dvou statistických sekcí. První možností bude zpracování
-//číselných hodnot, nad kterými budou prováděny statistické operace (průměr, vážený průměr,
-//rozptyl, směrodatná odchylka, histogram, medián).
+	//1. Aplikace bude rozdělena do dvou statistických sekcí. První možností bude zpracování
+	//číselných hodnot, nad kterými budou prováděny statistické operace (průměr, vážený průměr,
+	//rozptyl, směrodatná odchylka, histogram, medián).
+	/*
+	//calculate average
+	Prumer = for (int i = 0; i < sizeof(DATA); i++) { Prumer += DATA[i]; } Prumer = Prumer / sizeof(DATA);
+	Vazenyprumer = for (int i = 0; i < sizeof(DATA); i++) { Vazenyprumer += DATA[i] * i; } Vazenyprumer = Vazenyprumer / sizeof(DATA);
+	//calculate variance
+	Rozptyl = for (int i = 0; i < sizeof(DATA); i++) { Rozptyl += (DATA[i] - Prumer) * (DATA[i] - Prumer); } Rozptyl = Rozptyl / sizeof(DATA);
+	//calculate standard deviation
+	SmrOdchylka = sqrt(Rozptyl);
+	//calculate median
+	if (sizeof(DATA) % 2 == 0)
+		{
+			Median = (DATA[sizeof(DATA) / 2] + DATA[sizeof(DATA) / 2 + 1]) / 2;
+		}
+	else
+		{
+			Median = DATA[sizeof(DATA) / 2];
 
-//calculate average
-Prumer = for (int i = 0; i < sizeof(DATA); i++) { Prumer += DATA[i]; } Prumer = Prumer / sizeof(DATA);
-Vazenyprumer = for (int i = 0; i < sizeof(DATA); i++) { Vazenyprumer += DATA[i] * i; } Vazenyprumer = Vazenyprumer / sizeof(DATA);
-//calculate variance
-Rozptyl = for (int i = 0; i < sizeof(DATA); i++) { Rozptyl += (DATA[i] - Prumer) * (DATA[i] - Prumer); } Rozptyl = Rozptyl / sizeof(DATA);
-//calculate standard deviation
-SmrOdchylka = sqrt(Rozptyl);
-//calculate median
-if (sizeof(DATA) % 2 == 0)
-{
-	Median = (DATA[sizeof(DATA) / 2] + DATA[sizeof(DATA) / 2 + 1]) / 2;
-}
-else
-{
-	Median = DATA[sizeof(DATA) / 2];
+		}
 
-}
-
-//calculate min and max
-Min = DATA[0];
-Max = DATA[0];
-for (int i = 0; i < sizeof(DATA); i++)
-{
-	if (DATA[i] < Min)
+	//calculate min and max
+	Min = DATA[0];
+	Max = DATA[0];
+	for (int i = 0; i < sizeof(DATA); i++)
 	{
-		Min = DATA[i];
+		if (DATA[i] < Min)
+		{
+			Min = DATA[i];
+		}
+		if (DATA[i] > Max)
+		{
+			Max = DATA[i];
+		}
 	}
-	if (DATA[i] > Max)
-	{
-		Max = DATA[i];
-	}
-}
-//calculate histogram
+//calculate histogram*/
 }
 
 void TextAnalyser()
 {
 	//2. Druhou částí budou statistické výpočty nad textem. Program bude umožňovat výpočet počtu
-//znaků, počtu slov, histogram písmen a délek slov.
-	int PocetZnaku;
+	//znaků, počtu slov, histogram písmen a délek slov.
+	int PocetZnaku = 0;
 	int PocetSlov = 0;
-
+	/*
 	PocetZnaku = sizeof(DATA);
-//calculate number of words
+	/calculate number of words
 	for (int i = 0; i < sizeof(DATA); i++)
 	{
 		if (DATA[i] == " ")
 		{
 			PocetSlov++;
 		}
-	}
-
+	}*/
+}
+	
 //put word in 2 dimentional array. First dimension is word, second is number of occurences in dataset
 //if word is already in array, increase second dimension by 1
 //if word is not in array, add it to array and set second dimension to 1
@@ -199,6 +203,5 @@ int main(){
 	 return 0;
 
 }
-
 return 0;
 }
