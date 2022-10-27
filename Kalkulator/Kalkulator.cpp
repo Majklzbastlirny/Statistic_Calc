@@ -22,7 +22,9 @@ Bonusový úkol: Implementujte možnost vykreslení histogramu a gaussova rozlo�
 
 
 using namespace std;
-char DATA[];
+char DATA[100];
+double FormatedNumbers[100];
+char FormatedLetters[100];
 double datasize = 0;
 
 void Loader()
@@ -78,7 +80,27 @@ else
 	return 0;
 }
 }
+void Formatter(int type)
+{
 
+
+	if (type == 1)
+	{
+		//format numbers
+		//replace , with .
+		//put numbers into new array
+
+
+	}
+	else if (type == 2)
+	{
+		//format letters
+	}
+	else
+	{
+		printf("Nastala chyba. Program se ukončí.");
+	}
+}
 
 int Saver()
 {
@@ -99,9 +121,6 @@ void NumericAnalyser()
 	double Min;
 	double Max;
 
-	
-
-	
 //1. Aplikace bude rozdělena do dvou statistických sekcí. První možností bude zpracování
 //číselných hodnot, nad kterými budou prováděny statistické operace (průměr, vážený průměr,
 //rozptyl, směrodatná odchylka, histogram, medián).
@@ -157,6 +176,10 @@ void TextAnalyser()
 			PocetSlov++;
 		}
 	}
+
+//put word in 2 dimentional array. First dimension is word, second is number of occurences in dataset
+//if word is already in array, increase second dimension by 1
+//if word is not in array, add it to array and set second dimension to 1
 
 int main(){
 	printf("Vítejte v kalkulačce");
