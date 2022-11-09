@@ -22,44 +22,111 @@ terminálu ->výstup do souboru
 
 #include "Kalkulator.h"
 #include "stdio.h"
+#include <locale.h>
+#include <stdbool.h>
+#include <string.h>
 #include <regex>
 #include <iostream>
 
 
 
 using namespace std;
-char UnformattedData[] = 1;
+//char UnformattedData[] = 1;
 double FormatedNumbers = 1;
 char FormatedWords = 1;
 double datasize;
-	
+char* UnformattedData = (char*)malloc(255);
 
-void Loader()
+
+int Loader()
 {
-	char Filename = ' ';
-	//Ask for file name in same directory as program
-	printf("Zadej jmeno souboru: ");
-	scanf("%s", &Filename);
+#define LOWER 1024
+#define UPPER 65536
 
-	//look for file, if not found, ask again and again
+	char name[1];
+	printf("Zadej jmeno souburu ve stejne slozce jako executable nebo cestu.\n");
+	scanf("%s", &name);
+
 	FILE* file;
-	file = fopen(&Filename, "r");
-	while (file == NULL)
-	{
-		printf("Soubor nebyl nalezen, zadej jmeno souboru znovu: ");
-		scanf("%s", Filename);
-		file = fopen(&Filename, "r");
-		
-	}
-	//get size of file and allocate memory for data
-	fseek(file, 0, SEEK_END);
-	datasize = ftell(file);
-	rewind(file);
-	UnformattedData = malloc(datasize+1);
 
-	//put all data from file to Unformated data
-	fread(UnformattedData, 1, datasize, file);
-	fclose(file);
+
+	file = fopen(name, "r");
+
+
+	if (file == NULL)
+	{
+		printf("Chyba pri otevirani souboru!\n");
+		return 1;
+	}
+	printf("Soubor nalezen. Probiha nacitani...\n");
+	// increase will keep track of the size by which to increase the dynamically
+	// allocated block of memory
+	size_t increase = LOWER;
+
+	// allocated will keep track of the total size of the dynamically allocated
+	// block of memory
+	size_t allocated = increase;
+
+	// Initially allocate a block of memory of size equal to our lower bound
+	UnformattedData = (char*)malloc(allocated);
+
+	// total will keep track of the total number of characters in the file
+	size_t total = 0;
+
+
+	while (!feof(file) && !ferror(file))
+	{
+
+		UnformattedData[total] = fgetc(file);
+		total++;
+
+
+		if (total >= allocated)
+		{
+
+			if (increase >= UPPER) increase = UPPER;
+
+			allocated += increase;
+
+			UnformattedData = (char*)realloc(UnformattedData, allocated);
+
+
+			increase *= 2;
+		}
+	}
+
+	// If there has been an error reading from the file, exit with an error
+	// message and status
+	if (ferror(file))
+	{
+		printf("Error reading from file!\n");
+		return 1;
+	}
+
+		// It's most likely that we have more space allocated than we actually need
+		// to store the string, e.g. if realloc() is never we'll have allocated
+		// 1024 chars/bytes worth of space (or whatever our lower limit was) for
+		// a string that might only be 50 characers long.  This would be a lot of
+		// unused memory, so we use realloc() to decrease the size of the block of
+		// memory down to exactly the number of chars requires (total).
+	UnformattedData = (char*)realloc(UnformattedData, total);
+
+		// Set the null terminator as the last char in the string to termiante
+		// the string.
+	UnformattedData[total - 1] = '\0';
+
+		// Close the file as we are done working with it now.
+		fclose(file);
+
+		// Output the string containing the file contents
+		printf("File Contents:\n\n");
+		//printf("%s\n", UnformattedData);
+
+		// Free the dynamically allocated string as we are done working with it too.
+		//free(string);
+
+		return 0;
+	
 }
 
 
@@ -77,11 +144,13 @@ int Analyser()
 
 
 	
-	printf("Probíhá analýza dat...");
+	printf("Probíhá analýza dat...\n");
+	printf("%s\n", UnformattedData);
 
 	//scan whole file and apply regex
 
 
+	return 0;
 }
 void Formatter(int type)
 {
@@ -112,6 +181,7 @@ int Saver()
 	scanf("%s", FileName);
 	FILE *file;
 	file = fopen(FileName, "w");
+	return 0;
 }
 
 void NumericAnalyser()
@@ -186,9 +256,10 @@ void TextAnalyser()
 //if word is not in array, add it to array and set second dimension to 1
 
 int main(){
-	printf("Vítejte v kalkulačce");
+
+	printf("Vítejte v kalkulačce\n");
 	//load data from file
-	Loader();
+	Loader() ? printf("gud") : printf("bad");
 	//determine type of data
 	switch (Analyser())
 	{
