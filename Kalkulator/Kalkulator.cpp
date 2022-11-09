@@ -34,6 +34,8 @@ using namespace std;
 
 char* FormatedNumbers = (char*)malloc(1);
 char* FormatedWords = (char*)malloc(1);
+	size_t total = 0;
+
 
 double datasize;
 char* UnformattedData = (char*)malloc(1);
@@ -72,7 +74,7 @@ int Loader()
 	UnformattedData = (char*)malloc(allocated);
 
 	// total will keep track of the total number of characters in the file
-	size_t total = 0;
+	total = 0;
 
 
 	while (!feof(file) && !ferror(file))
@@ -100,7 +102,7 @@ int Loader()
 	// message and status
 	if (ferror(file))
 	{
-		printf("Error reading from file!\n");
+		printf("Chyba pri cteni ze souboru!\n");
 		return 1;
 	}
 
@@ -116,16 +118,20 @@ int Loader()
 		// the string.
 	UnformattedData[total - 1] = '\0';
 
-		// Close the file as we are done working with it now.
 		fclose(file);
 
-		// Output the string containing the file contents
-		//printf("File Contents:\n\n");
-		//printf("%s\n", UnformattedData);
+		datasize = 0;
+		for (int i = 0; i < total; i++)
+		{
+			if (UnformattedData[i] == '\n' || UnformattedData[i] == ' ')
+			{
+				datasize++;
+			}
+		}
 
-		// Free the dynamically allocated string as we are done working with it too.
-		//free(string);
+		printf("Pocet invidualnich veci v souboru: %.0lf\n", datasize);
 		
+
 		return 0;
 	
 }
@@ -136,22 +142,53 @@ int Analyser()
 {
 	float LetterOccurence = 0;
 	float NumberOccurence = 0;
-	//regex_t regex;
+	printf("Probiha analyza dat...\n");
 
+  	//checks, how many characters are numbers and how many are letters
+	for (int i = 0; i < total; i++)
+	{
+		if (isdigit(UnformattedData[i]))
+		{
+			NumberOccurence++;
+		}
+		else if (isalpha(UnformattedData[i]))
+		{
+			LetterOccurence++;
+		}
+	}
+
+	printf("Soubor obsahuje %.0f cisel %.0f pismen.\n", NumberOccurence, LetterOccurence);
+	if (LetterOccurence == 0)
+	{
+		//printf("The file contains more numbers than letters.\n");
+		return 1;
+	}
+	else if (NumberOccurence == 0)
+	{
+		//printf("The file contains more letters than numbers.\n");
+		return 2;
+	}
+	else
+	{
+		//printf("The file contains the same amount of numbers and letters.\n");
+		return 0;
+	}
+	
+
+
+	//regex_t regex;
 	//create regex for numbers
 	//regex number("^[0-9]*$");
 	//create regex for letters
 	//regex letter("^[a-zA-ZáčďéěíňóřšťůúýžÁČĎÉĚÍŇÓŘŠŤŮÚÝŽ]*$");
 
+	
+	
 
 	
-	printf("Probíhá analýza dat...\n");
-	printf("%s\n", UnformattedData);
-
-	//scan whole file and apply regex
 
 
-	return 0;
+	
 }
 void Formatter(int type)
 {
@@ -171,14 +208,14 @@ void Formatter(int type)
 	}
 	else
 	{
-		printf("Nastala chyba. Program se ukončí.");
+		printf("Nastala chyba. Program se ukonci.");
 	}
 }
 
 int Saver()
 {
 	char FileName[255];
-	printf("Zadejte jméno souboru, do kterého se mají výsledky uložit: ");
+	printf("Zadejte jmeno souboru, do ktereho se maji vysledky ulozit: ");
 	scanf("%s", FileName);
 	FILE *file;
 	file = fopen(FileName, "w");
@@ -258,10 +295,19 @@ void TextAnalyser()
 
 int main(){
 
-	printf("Vítejte v kalkulačce\n");
+	printf("Vitejte v kalkulacce\n");
 	//load data from file
-	Loader() ? printf("gud") : printf("bad");
-	//determine type of data
+	switch (Loader())
+	{
+	case 1:
+		printf("Program se ukonci.");
+		return 0;
+
+	default:
+		break;
+	}
+	
+
 	switch (Analyser())
 	{
 	case 1:
@@ -271,8 +317,9 @@ int main(){
 		TextAnalyser();
 		break;
 	default:
-	 printf("Program se ukončí.");
-	 return 0;
+		printf("Program obsahuje jak cisla, tak i znaky. To ale bohuzel nemuzu analyzovat");
+		printf("Program se ukonci.");
+		return 0;
 
 }
 return 0;
