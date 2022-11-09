@@ -31,11 +31,12 @@ terminálu ->výstup do souboru
 
 
 using namespace std;
-//char UnformattedData[] = 1;
-double FormatedNumbers = 1;
-char FormatedWords = 1;
+
+char* FormatedNumbers = (char*)malloc(1);
+char* FormatedWords = (char*)malloc(1);
+
 double datasize;
-char* UnformattedData = (char*)malloc(255);
+char* UnformattedData = (char*)malloc(1);
 
 
 int Loader()
@@ -43,7 +44,7 @@ int Loader()
 #define LOWER 1024
 #define UPPER 65536
 
-	char name[1];
+	char name[255];
 	printf("Zadej jmeno souburu ve stejne slozce jako executable nebo cestu.\n");
 	scanf("%s", &name);
 
@@ -119,12 +120,12 @@ int Loader()
 		fclose(file);
 
 		// Output the string containing the file contents
-		printf("File Contents:\n\n");
+		//printf("File Contents:\n\n");
 		//printf("%s\n", UnformattedData);
 
 		// Free the dynamically allocated string as we are done working with it too.
 		//free(string);
-
+		
 		return 0;
 	
 }
