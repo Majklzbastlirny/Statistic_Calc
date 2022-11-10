@@ -1,0 +1,3 @@
+C:/Users/Michal/Documents/GitHub/Statistic_Calc/Kalkulator/out/build/x64-release/CMakeFiles/Kalkulator.dir
+C:/Users/Michal/Documents/GitHub/Statistic_Calc/Kalkulator/out/build/x64-release/CMakeFiles/edit_cache.dir
+C:/Users/Michal/Documents/GitHub/Statistic_Calc/Kalkulator/out/build/x64-release/CMakeFiles/rebuild_cache.dir

@@ -1,9 +1,8 @@
-﻿// Kalkulator.h: Soubor k zahrnutí pro standardní systémové soubory k zahrnutí
-// nebo soubory k zahrnutí specifické pro projekt.
+﻿// Kalkulator.h : Include file for standard system include files,
+// or project specific include files.
 
 #pragma once
 
 #include <iostream>
 
-
-// TODO: Zde odkažte na dodatečné hlavičky, které program vyžaduje.
+// TODO: Reference additional headers your program requires here.
