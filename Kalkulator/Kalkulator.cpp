@@ -208,7 +208,7 @@ int Analyser()
 void Formatter(int type)
 {
 	//https://www.geeksforgeeks.org/dynamically-allocate-2d-array-c/
-
+	/*
 	if (type == 1)
 	{
 		//format numbers
@@ -239,9 +239,7 @@ void Formatter(int type)
 	}
 	else if (type == 2)
 	{
-		//format words
-		//replace , with .
-		//put words into new array
+		
 		char FormatedWords[datasize];
 		for (int i = 0; i < total; i++)
 		{
@@ -258,7 +256,7 @@ void Formatter(int type)
 	else
 	{
 		printf("Chyba pri formatovani dat!\n");
-	}
+	}*/
 }
 
 int Saver()
