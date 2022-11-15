@@ -22,6 +22,7 @@ terminálu ->výstup do souboru
 
 #include "Kalkulator.h"
 #include "stdio.h"
+#include "dynarray.h"
 #include <locale.h>
 #include <stdbool.h>
 #include <string.h>
@@ -147,6 +148,7 @@ int Analyser()
 {
 	float LetterOccurence = 0;
 	float NumberOccurence = 0;
+	float Other = 0;
 	printf("Probiha analyza dat...\n");
 
 	//checks, how many characters are numbers and how many are letters
@@ -156,13 +158,16 @@ int Analyser()
 		{
 			NumberOccurence++;
 		}
-		else if (isalpha(UnformattedData[i]))
+		else if (isalpha(UnformattedData[i]) && UnformattedData[i] != '\0')
 		{
 			LetterOccurence++;
 		}
+		else {
+		Other++;
+		}
 	}
 
-	printf("Soubor obsahuje %.0f cisel %.0f pismen.\n", NumberOccurence, LetterOccurence);
+	printf("Soubor obsahuje %.0f cisel %.0f pismen a %.0f ostatnich znaku.\n", NumberOccurence, LetterOccurence, Other);
 	double test;
 	scanf("%lf", &test);
 	if (LetterOccurence == 0)

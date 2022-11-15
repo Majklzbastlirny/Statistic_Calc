@@ -50,18 +50,18 @@ The CXX compiler identification is MSVC, found in "C:/Users/Michal/Documents/Git
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: C:/Users/Michal/Documents/GitHub/Statistic_Calc/Kalkulator/out/build/x64-debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~1/MIB055~1/2022/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_f2df2 && [1/2] Building C object CMakeFiles\cmTC_f2df2.dir\CMakeCCompilerABI.c.obj
+Run Build Command(s):C:/PROGRA~1/MIB055~1/2022/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_2aa44 && [1/2] Building C object CMakeFiles\cmTC_2aa44.dir\CMakeCCompilerABI.c.obj
 Poznámka: Včetně souboru: C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.24\Modules\CMakeCompilerABI.h
-[2/2] Linking C executable cmTC_f2df2.exe
+[2/2] Linking C executable cmTC_2aa44.exe
 
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: C:/Users/Michal/Documents/GitHub/Statistic_Calc/Kalkulator/out/build/x64-debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~1/MIB055~1/2022/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_7f1d2 && [1/2] Building CXX object CMakeFiles\cmTC_7f1d2.dir\CMakeCXXCompilerABI.cpp.obj
+Run Build Command(s):C:/PROGRA~1/MIB055~1/2022/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_d304a && [1/2] Building CXX object CMakeFiles\cmTC_d304a.dir\CMakeCXXCompilerABI.cpp.obj
 Poznámka: Včetně souboru: C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.24\Modules\CMakeCompilerABI.h
-[2/2] Linking CXX executable cmTC_7f1d2.exe
+[2/2] Linking CXX executable cmTC_d304a.exe
 
 
 

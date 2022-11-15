@@ -1,3 +1,4 @@
 # ninja log v5
-33	4272	6898008716025270	CMakeFiles/Kalkulator.dir/Kalkulator.cpp.obj	5271297130b3dd12
-4276	4928	6898008721429538	Kalkulator.exe	c783613b8c64e5
+5	1766	6901981783449756	CMakeFiles/Kalkulator.dir/Kalkulator.cpp.obj	847ded2d730ba730
+1768	2016	6901981785489299	Kalkulator.exe	d6c04bc7d27006e7
+14	1488	6901962264214516	CMakeFiles/Kalkulator.dir/dynarray.cpp.obj	dc5d129200c0f57c
