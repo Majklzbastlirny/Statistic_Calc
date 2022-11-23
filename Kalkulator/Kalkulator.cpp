@@ -23,6 +23,7 @@ terminálu ->výstup do souboru
 #include "Kalkulator.h"
 #include "stdio.h"
 #include "dynarray.h"
+#include "IsAlphaPlus.h"
 #include <locale.h>
 #include <stdbool.h>
 #include <string.h>
@@ -35,6 +36,8 @@ using namespace std;
 
 //char* FormatedNumbers = (char*)malloc(1);
 //char* FormatedWords = (char*)malloc(1);
+Array FormatedNumbers;
+Array FormatedWords;
 size_t total = 0;
 
 
@@ -144,7 +147,7 @@ int Loader(char* dragndrop)
 
 
 
-int Analyser()
+int AnalyseAndFormat()
 {
 	float LetterOccurence = 0;
 	float NumberOccurence = 0;
@@ -158,7 +161,7 @@ int Analyser()
 		{
 			NumberOccurence++;
 		}
-		else if (isalpha(UnformattedData[i]) && UnformattedData[i] != '\0')
+		else if (IsAlphaPlus(UnformattedData[i]) && UnformattedData[i] != '\0')
 		{
 			LetterOccurence++;
 		}
@@ -174,15 +177,53 @@ int Analyser()
 	{
 		//printf("The file contains more numbers than letters.\n");
 		//FormatedWords = (char*)malloc(total);
+		initArray(&FormatedNumbers, datasize);
+		for (int i = 0; i < total; i++)
+		{
+			//replace all decimal points with commas
+			if (UnformattedData[i] == '.')
+			{
+				UnformattedData[i] = ',';
+			}
+		}
 
+			//continously read invidual numbers and commas, if delimiter is found, pack whole number and put it into array
+			char* number = (char*)malloc(1);
+			int numberlength = 0;
 
-		//free(UnformattedData);
+			for (int i = 0; i < total; i++)
+			{
+				if (isdigit(UnformattedData[i]) || UnformattedData[i] == ',')
+				{
+					numberlength++;
+					number = (char*)realloc(number, numberlength);
+					number[numberlength - 1] = UnformattedData[i];
+				}
+				else if (UnformattedData[i] == ' ' || UnformattedData[i] == '\n' || UnformattedData[i] == EOF)
+				{
+					numberlength++;
+					number = (char*)realloc(number, numberlength);
+					number[numberlength - 1] = '\0';
+					//FormatedNumbers = (char*)realloc(FormatedNumbers, strlen(FormatedNumbers) + strlen(number) + 1);
+					//strcat(FormatedNumbers, number);
+					//strcat(FormatedNumbers, " ");
+					//addToArray(&FormatedNumbers, number);
+					numberlength = 0;
+					number = (char*)malloc(1);
+				}
+			}
+			
+			printf("Pocet nactenych cisel: %.0lf\n", FormatedNumbers.size);
+
+			free(number);
+			free(UnformattedData);
 		return 1;
 	}
 	else if (NumberOccurence == 0)
 	{
 		//printf("The file contains more letters than numbers.\n");
-		//FormatedNumbers = (char*)malloc(total);
+
+		initArray(&FormatedWords, datasize);
 
 
 		//free(UnformattedData);
@@ -338,16 +379,15 @@ int main(int argc, char* argv[]) {
 	}
 
 
-	switch (Analyser())
+	switch (AnalyseAndFormat())
 	{
+
 	case 1:
 		printf("Program indentifikoval data jako: čísla\n");
-		Formatter(1);
 		NumericAnalyser();
 		break;
 	case 2:
 		printf("Program indentifikoval data jako: znaky\n");
-		Formatter(2);
 		TextAnalyser();
 		break;
 	default:
