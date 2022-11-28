@@ -22,7 +22,7 @@ terminálu ->výstup do souboru
 
 #include "Kalkulator.h"
 #include "stdio.h"
-#include "dynarray.h"
+
 #include "IsAlphaPlus.h"
 #include <locale.h>
 #include <stdbool.h>
@@ -34,16 +34,15 @@ terminálu ->výstup do souboru
 
 using namespace std;
 
-//char* FormatedNumbers = (char*)malloc(1);
-//char* FormatedWords = (char*)malloc(1);
-Array FormatedNumbers;
-Array FormatedWords;
+
+
 size_t total = 0;
 
 
 double datasize;
 char* UnformattedData = (char*)malloc(1);
-
+//array for output data. dynamic, 2 columns (1st is Name, 2nd is Value)
+char** OutputData = (char**)malloc(1);
 
 int Loader(char* dragndrop)
 {
@@ -53,9 +52,10 @@ int Loader(char* dragndrop)
 	char name[255];
 	FILE* file;
 
-	printf("\nNyni se soubor nacte\n");
+	printf("\nNyni se nactou data\n");
 	if (dragndrop == NULL) {
 		printf("Zadej jmeno souburu ve stejne slozce jako executable nebo cestu.\n");
+		
 		scanf("%s", &name);
 		file = fopen(name, "r");
 	}
@@ -63,6 +63,8 @@ int Loader(char* dragndrop)
 		file = fopen(dragndrop, "r");
 		
 	}
+	//format filename to make it windows compliant
+	//
 	
 
 	if (file == NULL)
@@ -129,18 +131,7 @@ int Loader(char* dragndrop)
 
 	fclose(file);
 
-	datasize = 0;
-	for (int i = 0; i < total; i++)
-	{
-		if (UnformattedData[i] == '\n' || UnformattedData[i] == ' ' || UnformattedData[i] == EOF)
-		{
-			datasize++;
-		}
-	}
-
-	printf("Pocet invidualnich veci v souboru: %.0lf\n", datasize);
-
-
+	
 	return 0;
 
 }
@@ -153,6 +144,18 @@ int AnalyseAndFormat()
 	float NumberOccurence = 0;
 	float Other = 0;
 	printf("Probiha analyza dat...\n");
+	
+	datasize = 0;
+	for (int i = 0; i < total; i++)
+	{
+		if (UnformattedData[i] == '\n' || UnformattedData[i] == ' ' || UnformattedData[i] == EOF)
+		{
+			datasize++;
+		}
+	}
+
+	printf("Pocet invidualnich veci v souboru: %.0lf\n", datasize);
+
 
 	//checks, how many characters are numbers and how many are letters
 	for (int i = 0; i < total; i++)
@@ -171,62 +174,40 @@ int AnalyseAndFormat()
 	}
 
 	printf("Soubor obsahuje %.0f cisel %.0f pismen a %.0f ostatnich znaku.\n", NumberOccurence, LetterOccurence, Other);
-	double test;
-	scanf("%lf", &test);
+	//double test;
+	//scanf("%lf", &test);
 	if (LetterOccurence == 0)
 	{
-		//printf("The file contains more numbers than letters.\n");
-		//FormatedWords = (char*)malloc(total);
-		initArray(&FormatedNumbers, datasize);
+		//go through the whole array. if it's a number or decimal point, add it to buffer. if it's not, convert buffer to double and add it to output array. Log the number of whole numbers in output array.
+		char* buffer = (char*)malloc(1);
+		int bufferindex = 1000;
+		int outputindex = 0;
+		int Numberofwholenumbers = 0;
 		for (int i = 0; i < total; i++)
 		{
-			//replace all decimal points with commas
-			if (UnformattedData[i] == '.')
+			if (isdigit(UnformattedData[i]) || UnformattedData[i] == '.')
 			{
-				UnformattedData[i] = ',';
+				buffer[bufferindex] = UnformattedData[i];
+				bufferindex++;
+				buffer = (char*)realloc(buffer, bufferindex + 1);
+			}
+			else
+			{
+
+
 			}
 		}
-
-			//continously read invidual numbers and commas, if delimiter is found, pack whole number and put it into array
-			char* number = (char*)malloc(1);
-			int numberlength = 0;
-
-			for (int i = 0; i < total; i++)
-			{
-				if (isdigit(UnformattedData[i]) || UnformattedData[i] == ',')
-				{
-					numberlength++;
-					number = (char*)realloc(number, numberlength);
-					number[numberlength - 1] = UnformattedData[i];
-				}
-				else if (UnformattedData[i] == ' ' || UnformattedData[i] == '\n' || UnformattedData[i] == EOF)
-				{
-					numberlength++;
-					number = (char*)realloc(number, numberlength);
-					number[numberlength - 1] = '\0';
-					//FormatedNumbers = (char*)realloc(FormatedNumbers, strlen(FormatedNumbers) + strlen(number) + 1);
-					//strcat(FormatedNumbers, number);
-					//strcat(FormatedNumbers, " ");
-					//addToArray(&FormatedNumbers, number);
-					numberlength = 0;
-					number = (char*)malloc(1);
-				}
-			}
-			
-			printf("Pocet nactenych cisel: %.0lf\n", FormatedNumbers.size);
-
-			free(number);
-			free(UnformattedData);
+		printf("Pocet cisel v souboru: %d\n", Numberofwholenumbers);
+		printf("These numbers were found:");
+		for (int i = 0; i < Numberofwholenumbers; i++)
+		{
+			printf("%s\n", buffer[i]);
+		}
 		return 1;
 	}
 	else if (NumberOccurence == 0)
 	{
-		//printf("The file contains more letters than numbers.\n");
-
-		initArray(&FormatedWords, datasize);
-
-
-		//free(UnformattedData);
+		//create new array, 
 		return 2;
 	}
 	else
@@ -236,75 +217,7 @@ int AnalyseAndFormat()
 	}
 
 
-
-	//regex_t regex;
-	//create regex for numbers
-	//regex number("^[0-9]*$");
-	//create regex for letters
-	//regex letter("^[a-zA-ZáčďéěíňóřšťůúýžÁČĎÉĚÍŇÓŘŠŤŮÚÝŽ]*$");
-
-
-
-
-
-
-
-
 }
-void Formatter(int type)
-{
-	//https://www.geeksforgeeks.org/dynamically-allocate-2d-array-c/
-	/*
-	if (type == 1)
-	{
-		//format numbers
-		//replace , with .
-		//put numbers into new array
-		
-		//create new array with the number of columns same as datasize variable (dynamically allocated)
-		
-
-
-
-
-	for (int i = 0; i < total; i++)
-	{
-		if (isdigit(UnformattedData[i]))
-		{
-			FormatedNumbers[i] = UnformattedData[i];
-		}
-		else if (UnformattedData[i] == ',')
-		{
-			FormatedNumbers[i] = '.';
-		}
-		else
-		{
-			FormatedNumbers[i] = 0;
-		}
-	}
-	}
-	else if (type == 2)
-	{
-		
-		char FormatedWords[datasize];
-		for (int i = 0; i < total; i++)
-		{
-			if (isalpha(UnformattedData[i]))
-			{
-				FormatedWords[i] = UnformattedData[i];
-			}
-			else
-			{
-				FormatedWords[i] = 0;
-			}
-		}
-	}
-	else
-	{
-		printf("Chyba pri formatovani dat!\n");
-	}*/
-}
-
 int Saver()
 {
 	char FileName[255];
@@ -327,6 +240,8 @@ void NumericAnalyser()
 
 
 
+
+
 	//1. Aplikace bude rozdělena do dvou statistických sekcí. První možností bude zpracování
 	//číselných hodnot, nad kterými budou prováděny statistické operace (průměr, vážený průměr,
 	//rozptyl, směrodatná odchylka, histogram, medián).
@@ -339,18 +254,107 @@ void TextAnalyser()
 {
 	//2. Druhou částí budou statistické výpočty nad textem. Program bude umožňovat výpočet počtu
 	//znaků, počtu slov, histogram písmen a délek slov.
-	int PocetZnaku = 0;
-	int PocetSlov = 0;
-	/*
-	PocetZnaku = sizeof(DATA);
-	/calculate number of words
-	for (int i = 0; i < sizeof(DATA); i++)
+	int PocetPismen = 0;
+	int PocetSlov = -1;
+	int ShortestWordLengh = 0;
+	int LongestWordLengh = 0;
+	
+	//count number of letters
+	for (int i = 0; i < total; i++)
 	{
-		if (DATA[i] == " ")
+		if (IsAlphaPlus(UnformattedData[i]))
+		{
+			PocetPismen++;
+		}
+	}
+	printf("Pocet pismen v souboru: %d\n", PocetPismen);
+	
+	//count number of words. Word is defined as a sequence of letters.
+	for (int i = 0; i < total; i++)
+	{
+		if (IsAlphaPlus(UnformattedData[i]) && !IsAlphaPlus(UnformattedData[i + 1]))
 		{
 			PocetSlov++;
 		}
+	}
+	
+	printf("Pocet slov v souboru: %d\n", PocetSlov);
+
+	
+	
+	
+	//list all words
+	char* buffer = (char*)malloc(1);
+	int bufferindex = 0;
+	int outputindex = 0;
+	bool lastchar = 0;
+	//create array FormattedWords with size PocetSlov
+	/*
+	double** array = new double* [rows];
+	for (int i = 0; i < rows; i++)
+	{
+		array[i] = new double[columns];
 	}*/
+	
+	//create array with PocetSlov number of rows and 3 columns
+	//first row is for word, second is for number of letters, third is for number of occurences
+	char** FormattedWords = (char**)malloc(PocetSlov * sizeof(char*));
+	for (int i = 0; i < PocetSlov; i++)
+	{
+		FormattedWords[i] = (char*)malloc(3 * sizeof(char));
+	}
+	
+
+	for (int i = 0; i < total; i++)
+	{
+		if (isalpha(UnformattedData[i]))
+		{
+			buffer[bufferindex] = UnformattedData[i];
+			bufferindex++;
+			buffer = (char*)realloc(buffer, bufferindex + 1);
+			lastchar = 1;
+		}
+		else
+		{
+			if (lastchar == 1)
+			{
+				//read all characters from buffer, combine them into single word, add it to FormattedWords array and extend it by 1, reset buffer
+				printf("Word found: ");
+				for (int i = 0; i < bufferindex; i++)
+				{
+					printf("%c", buffer[i]);
+					//join buffer[i] to FormattedWords[outputindex][0]
+					FormattedWords[outputindex][0] += buffer[i];
+					
+					
+					
+					
+				}
+				printf("\n");
+				//append word to FormattedWords array
+				
+				
+				//Fx;	IX THIS SHIT
+				//add word to FormattedWords array
+				//FormattedWords[outputindex][0] = buffer;
+				printf("added to buffer");
+				//FormattedWords[outputindex][1] = bufferindex;
+				printf("added the number of letters in the word");
+				//FormattedWords[outputindex][2] = 1;
+				outputindex++;
+				buffer = 0;
+				bufferindex = 0;
+				lastchar = 0;
+			}
+			
+		}
+	}
+	printf("These words were found:");
+	for (int i = 0; i < PocetSlov; i++)
+	{
+		printf("%s\n", FormattedWords[i]);
+	}
+	
 }
 
 //put word in 2 dimentional array. First dimension is word, second is number of occurences in dataset

@@ -8,6 +8,6 @@ typedef struct {
 
 void initArray(Array* a, size_t initialSize);
 
-void insertArray(Array* a, int element);
+void addArray(Array* a, double element);
 
 void freeArray(Array* a);

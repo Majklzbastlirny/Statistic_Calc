@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "IsAlphaPlus.h"
 
 /*
@@ -14,23 +15,27 @@ char standardLetters[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
 //check if str[0] is a custom letter defined above, if so return 1, else return 0
 int IsAlphaPlus(char str)
 {
-    for (int i = 0; i < 52; i++)
+
+
+	
+    for (int i = 0; i < 52-1; i++)
     {
+		//printf("Now analysing: %c\n", str);
         if (str == standardLetters[i])
         {
             return 1;
         }
     }
     
-
-    for (int i = 0; i < 594; i++)
+    for (int i = 0; i < 595 - 1; i++)
     {
         if (str == customLetters[i])
         {
-        return 1;
+            return 1;
         }
-        
+
     }
+    
 
     return 0;
     
