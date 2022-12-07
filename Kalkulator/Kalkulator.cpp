@@ -41,8 +41,7 @@ size_t total = 0;
 char name[255];
 double datasize;
 char* UnformattedData = (char*)malloc(1);
-//array for output data. dynamic, 2 columns (1st is Name, 2nd is Value)
-char** OutputData = (char**)malloc(1);
+
 
 int Loader(char* dragndrop)
 {
@@ -204,7 +203,7 @@ void NumericAnalyser()
 	double Rozptyl = 0;
 	double SmrOdchylka = 0;
 	double Median = 0;
-	double Min = 0;
+	double Min = 999;
 	double Max = 0;
 	
 	double PocetCisel = 0;
@@ -219,41 +218,37 @@ void NumericAnalyser()
 		}
 	}
 
-	printf("Pocet invidualnich cisel v souboru: %lf\n", PocetInvCisel);
+	printf("Pocet invidualnich cisel v souboru: %.0lf\n", PocetInvCisel);
+
 
 	//count number of words. Word is defined as a sequence of letters.
 	for (long i = 0; i < total; i++)
 	{
-		if (isdigit(UnformattedData[i]) && UnformattedData[i + 1] != '.' && UnformattedData[i + 1] != '-')
+		if (UnformattedData[i] == '\n' || UnformattedData[i] == ' ' || UnformattedData[i] == EOF)
 		{
 			PocetCisel++;
 		}
 
+
 	}
 
-	printf("Pocet formatovanych cisel v souboru: %lf\n", PocetCisel);
+	printf("Pocet formatovanych cisel v souboru: %.0lf\n", PocetCisel);
 
-
+	/*bool test;
+	scanf("%d", &test);
+	*/
 
 	//list all words
 	char* buffer = (char*)malloc(1);
 	double bufferindex = 0;
-	double outputindex = 0;
+	int outputindex = 0;
 	bool lastchar = 0;
-	//create array FormattedWords with size PocetSlov
-	/*
-	double** array = new double* [rows];
-	for (int i = 0; i < rows; i++)
-	{
-		array[i] = new double[columns];
-	}*/
-
-	//create array with PocetSlov number of rows and 3 columns
-	//first row is for word, second is for number of letters, third is for number of occurences
-	double** FormattedNumbers = (double**)malloc(datasize * sizeof(long*));
+	//create array FormattedNumbers with size PocetCisel
+	
+	int** FormattedNumbers = (int**)malloc(datasize * sizeof(int*));
 	for (long i = 0; i < datasize; i++)
 	{
-		FormattedNumbers[i] = (double*)malloc(sizeof(long));
+		FormattedNumbers[i] = (int*)malloc(sizeof(int));
 	}
 
 
@@ -261,7 +256,6 @@ void NumericAnalyser()
 	{
 		if (isdigit(UnformattedData[i]) || UnformattedData[i] == '-' || UnformattedData[i] == '.')
 		{
-			//buffer[bufferindex] = UnformattedData[i];
 			bufferindex++;
 			buffer = (char*)realloc(buffer, bufferindex + 1);
 			lastchar = 1;
@@ -270,34 +264,19 @@ void NumericAnalyser()
 		{
 			if (lastchar == 1)
 			{
-				//read all characters from buffer, combine them into single word, add it to FormattedWords array and extend it by 1, reset buffer
-				//printf("Word found: ");
+
 				long i;
 				for (i = 0; i < bufferindex; i++)
 				{
-					//printf("%c", buffer[i]);
-					//join buffer[i] to FormattedWords[outputindex][0]
-					//FormattedNumbers[outputindex][i] = buffer[i];
-
-
-
+					printf("%c", buffer[i]);
+				
 
 				}
+				FormattedNumbers[outputindex][i] = atof(buffer);
 				//FormattedNumbers[outputindex][i] = 0;
 
-				//printf("\n");
-				//append word to FormattedWords array
-
-
-				//Fx;	IX THIS SHIT
-				//add word to FormattedWords array
-				//FormattedWords[outputindex][0] = buffer;
-				//printf("added to buffer");
-				//FormattedWords[outputindex][1] = bufferindex;
-				//printf("added the number of letters in the word");
-				//FormattedWords[outputindex][2] = 1;
 				outputindex++;
-				//buffer = 0;
+				
 				bufferindex = 0;
 				lastchar = 0;
 			}
@@ -310,6 +289,76 @@ void NumericAnalyser()
 	{
 		printf("%lf\n", FormattedNumbers[i]);
 	}
+
+	//calculate average
+	for (long i = 0; i < PocetCisel; i++)
+	{
+		//Prumer += FormattedNumbers[i];
+	}
+	Prumer = Prumer / PocetCisel;
+
+	//calculate weighted average
+	for (long i = 0; i < PocetCisel; i++)
+	{
+		Vazenyprumer += FormattedNumbers[i] * FormattedNumbers[i];
+	}
+	Vazenyprumer = Vazenyprumer / PocetCisel;
+
+	//calculate variance
+	for (long i = 0; i < PocetCisel; i++)
+	{
+		Rozptyl += (FormattedNumbers[i] - Prumer) * (FormattedNumbers[i] - Prumer);
+	}
+	Rozptyl = Rozptyl / PocetCisel;
+
+	//calculate standard deviation
+
+	SmrOdchylka = sqrt(Rozptyl);
+
+	//calculate median
+	if (PocetCisel % 2 == 0)
+	{
+		Median = (FormattedNumbers[PocetCisel / 2] + FormattedNumbers[PocetCisel / 2 + 1]) / 2;
+	}
+	else
+	{
+		Median = FormattedNumbers[PocetCisel / 2];
+	}
+	
+	//calculate min and max
+	for (long i = 0; i < PocetCisel; i++)
+	{
+		if (FormattedNumbers[i] < Min)
+		{
+			Min = FormattedNumbers[i];
+		}
+		if (FormattedNumbers[i] > Max)
+		{
+			Max = FormattedNumbers[i];
+		}
+	}
+	
+	
+	
+
+	printf("Enter the name of the file you wish to save the results to:\n");
+	char FileName[100];
+	scanf("%s", FileName);
+	FILE* f = fopen(FileName, "w");
+
+	fprintf(f, "The analysed file is %s\n", name);
+	fprintf(f, "The file contains %.0lf numbers.\n", PocetInvCisel);
+	fprintf(f, "The average of all numbers is %.2lf.\n", Prumer);
+	fprintf(f, "The weighted average of all numbers is %.2lf.\n", Vazenyprumer);
+	fprintf(f, "The variance of all numbers is %.2lf.\n", Rozptyl);
+	fprintf(f, "The standard deviation of all numbers is %.2lf.\n", SmrOdchylka);
+	fprintf(f, "The median of all numbers is %.2lf.\n", Median);
+	fprintf(f, "The minimum of all numbers is %.2lf.\n", Min);
+	fprintf(f, "The maximum of all numbers is %.2lf.\n", Max);
+	fclose(f);
+	printf("The data was successfully saved to %s.\n", FileName);
+
+	
 }
 
 void TextAnalyser()
@@ -631,7 +680,7 @@ void TextAnalyser()
 		fprintf(f, "Z: %d\n", LetZ);
 
 		fclose(f);
-		printf("The data was successfully saved to output.txt\n");
+		printf("The data was successfully saved to %s.\n", FileName);
 
 		//save the data to a file
 	//}
