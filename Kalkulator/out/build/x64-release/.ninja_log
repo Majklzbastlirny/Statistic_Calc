@@ -1,7 +1,7 @@
 # ninja log v5
-17	2453	6898155186981495	CMakeFiles/Kalkulator.dir/Kalkulator.cpp.obj	5ac5c51ad3f8b5a5
-2455	2824	6898155190687272	Kalkulator.exe	b9b0ea8173ad5010
-37	1376	6920390147604943	CMakeFiles/Kalkulator.dir/IsAlphaPlus.cpp.obj	73f68b6b7958f54c
-27	5189	6920390185842703	CMakeFiles/Kalkulator.dir/dynarray.cpp.obj	7374b6825a65c5f5
 16	5402	6920390187958663	CMakeFiles/Kalkulator.dir/Kalkulator.cpp.obj	5ac5c51ad3f8b5a5
 5403	5931	6920390193243351	Kalkulator.exe	962e4e3d267a55f0
+37	1376	6920390147604943	CMakeFiles/Kalkulator.dir/IsAlphaPlus.cpp.obj	73f68b6b7958f54c
+27	5189	6920390185842703	CMakeFiles/Kalkulator.dir/dynarray.cpp.obj	7374b6825a65c5f5
+21	2086	6922230428306293	CMakeFiles/Kalkulator.dir/Kalkulator.cpp.obj	5ac5c51ad3f8b5a5
+2087	2365	6922230431076313	Kalkulator.exe	962e4e3d267a55f0

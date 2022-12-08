@@ -198,16 +198,16 @@ int AnalyseAndFormat()
 
 void NumericAnalyser()
 {
-	double Prumer = 0;
-	double Vazenyprumer = 0;
-	double Rozptyl = 0;
-	double SmrOdchylka = 0;
-	double Median = 0;
-	double Min = 999;
-	double Max = 0;
+	int Prumer = 0;
+	int Vazenyprumer = 0;
+	int Rozptyl = 0;
+	int SmrOdchylka = 0;
+	int Median = 0;
+	int Min = 999;
+	int Max = 0;
 	
-	double PocetCisel = 0;
-	double PocetInvCisel = 0;
+	int PocetCisel = 0;
+	int PocetInvCisel = 0;
 
 	//allocate array of doubles
 	for (long i = 0; i < total; i++)
@@ -283,7 +283,7 @@ void NumericAnalyser()
 
 		}
 	}
-
+/*==
 	printf("These numbers were found:\n");
 	for (long i = 0; i < PocetCisel; i++)
 	{
@@ -307,7 +307,7 @@ void NumericAnalyser()
 	//calculate variance
 	for (long i = 0; i < PocetCisel; i++)
 	{
-		Rozptyl += (FormattedNumbers[i] - Prumer) * (FormattedNumbers[i] - Prumer);
+		Rozptyl += ((FormattedNumbers[i] - Prumer) * (FormattedNumbers[i] - Prumer));
 	}
 	Rozptyl = Rozptyl / PocetCisel;
 
@@ -318,7 +318,7 @@ void NumericAnalyser()
 	//calculate median
 	if (PocetCisel % 2 == 0)
 	{
-		Median = (FormattedNumbers[PocetCisel / 2] + FormattedNumbers[PocetCisel / 2 + 1]) / 2;
+		Median = (FormattedNumbers[PocetCisel / 2] + FormattedNumbers[(PocetCisel / 2 )+ 1]) / 2;
 	}
 	else
 	{
@@ -338,7 +338,7 @@ void NumericAnalyser()
 		}
 	}
 	
-	
+	*/
 	
 
 	printf("Enter the name of the file you wish to save the results to:\n");
@@ -559,7 +559,6 @@ void TextAnalyser()
 				//append word to FormattedWords array
 				
 				
-				//Fx;	IX THIS SHIT
 				//add word to FormattedWords array
 				//FormattedWords[outputindex][0] = buffer;
 				//printf("added to buffer");
